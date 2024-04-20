@@ -61,7 +61,7 @@ To start, we will be focused on development velocity: get the system working ASA
 * Python for all components: REST APIs, website, prediction engine
 * Kafka for event streaming
 
-Reference additional information in the _Design folder
+Reference additional information in the [_Design](./_DESIGN/README.md) folder
 
 ## How to run
 The system can be run local on a single laptop that is running linux (use WSL for Windows).  This is primarily for development purposes, but it could be run locally to try it out at an event.  
