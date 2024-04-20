@@ -49,7 +49,7 @@ The system is designed to support multiple prediction modules at once.  This wil
 
 Recording scouting data by TEAM is not yet supported but will likely improve prediction accuracy.
 
-Reference additional information in the _Requirements folder
+Reference additional information in the [_Requirements](./_REQUIREMENTS/README.md)  folder
 
 ## Technology Choices
 This system was created as a final project for a course in Microservices and Cloud Computing at Milwaukee School of Engineering, a required course for a Master's Degree in Machine Learning.
