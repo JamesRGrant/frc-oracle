@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+    <title>My First Webpage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+    <h1>frc-oracle</h1>
+    <p>Rank teams and predict matches at FRC events.</p>
+
+{% if not google_data %}
+    <a href="{{ url_for('google.login') }}">Login with Google</a>
+{% else %}
+    <p>Hello, {{ google_data['email'] }}!</p>
+    <a href="{{ url_for('logout') }}">Log out</a>
+{% endif %}
+    </center>
+</body>
+</html>
