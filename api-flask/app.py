@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from flask import Flask,  request, jsonify
 import requests
 import base64
+from kafka import KafkaConsumer
+
 
 # Load the environment variables
 load_dotenv()
@@ -36,6 +38,21 @@ def admin_status():
         output["frc_api_auth"] = "ok"
     else:
         output["frc_api_auth"] = "error: " + response.reason
+    
+    # Verify the Kafka server is up
+    try:
+        topic = 'match-results'
+        consumer = KafkaConsumer(bootstrap_servers='localhost:9092')
+        topics = consumer.topics()
+        consumer.close()
+        output["kafka"] = f'online but topic {topic} not found'
+        for t in topics:
+            if t == topic:
+                output["kafka"] = "ok"
+                break;
+    except:
+        output["kafka"] = "error: not connected"
+    
     return jsonify(output)
 
 

@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+    <title>frc-oracle</title>
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            margin: 2em;
+        }
+        h1 { color: #333; }
+        p { color: #666; }
+        td {text-align: center; padding: 5px; font-size: .75em}
+    </style>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+
+<body>
+    <center>
+    <h1>{{ title }}</h1>
+
+    <table>
+        <tr><td>Final Guess Accuracy:</td><td>{{ final_guess_accuracy }}</td></tr>
+        <tr><td>All Guesses Accuracy:</td><td>{{ all_guesses_accuracy }}</td></tr>
+    </table>
+
+
+    <table>
+    <tr>
+        <th>Match</th>
+        <th>R1</th>
+        <th>R2</th>
+        <th>R3</th>
+        <th>B1</th>
+        <th>B2</th>
+        <th>B3</th>
+        <th>Predicted</th>
+        <th>Actual</th>
+    </tr>
+    {% for id in matches %}
+    <tr>
+        {% set match = matches[id] %}
+        <td align="left">{{ match['name'] }}</td>
+        <td bgcolor="lightcoral">{{ match['teams']['red'][0] }}</td>
+        <td bgcolor="lightcoral">{{ match['teams']['red'][1] }}</td>
+        <td bgcolor="lightcoral">{{ match['teams']['red'][2] }}</td>
+        <td bgcolor="lightblue">{{ match['teams']['blue'][0] }}</td>
+        <td bgcolor="lightblue">{{ match['teams']['blue'][1]}}</td>
+        <td bgcolor="lightblue">{{ match['teams']['blue'][2] }}</td>
+
+        <!-- Predicted -->
+        {% set color = '' %}
+        {% set pred_count = '' %}
+        {% if match.predictions %}
+            {% set pred_count = 'n = ' + match['predictions'][0]['red']['win']|length|string() %}
+
+            <!-- Get the value of the last prediction -->
+            {% if match['predictions'][0]['red']['win'][-1] == 1 %}
+                {% set color = 'lightcoral' %}
+            {% elif match['predictions'][0]['blue']['win'][-1] == 1 %}
+                {% set color = 'lightblue' %}
+            {% endif %} 
+        {% endif %}
+        <td bgcolor="{{color}}">{{pred_count}}</td>
+
+        <!-- Actual -->
+        {% set color = '' %}
+        {% set text = '' %}
+        {% if match.results %}
+            
+            {% if match['results']['red']['win'] == 1 %}
+                {% set color = 'lightcoral' %}
+                {% set text = '<b>' + match['results']['red']['score']|string() + '</B> - ' + match['results']['blue']['score']|string() %}
+            {% elif match['results']['blue']['win'] == 1 %}
+                {% set text = match['results']['red']['score']|string() + ' - <b>' + match['results']['blue']['score']|string() + '</b>' %}
+                {% set color = 'lightblue' %}
+            <% else %>
+                {% set text = match['results']['red']['score']|string() + ' - ' + match['results']['blue']['score']|string() %}
+                {% set color = 'lightpurple' %}
+            {% endif %} 
+        {% endif %} 
+        <td bgcolor="{{color}}">{{text}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    </center>
+</body>
+</html>

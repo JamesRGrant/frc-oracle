@@ -34,9 +34,17 @@ def load_matches(year, event):
                 else:
                     blue.append(team['teamNumber'])
 
-
-            m = { 'name': name, 'teams': {'red': red, 'blue': blue}}
+            if id == 1:
+                pred = [{'algorithm': 'average_score', 'red': {'win': [0, 1]}, 'blue': {'win': [1, 0]}}]
+                results = {'red': {'win': 1, 'tie': 0, 'score': 75}, 'blue': {'win': 0, 'tie': 0, 'score': 47}}
+                m = { 'name': name, 'teams': {'red': red, 'blue': blue}, 'predictions': pred, 'results': results}
+            elif id == 2:
+                results = {'red': {'win': 1, 'tie': 0, 'score': 82}, 'blue': {'win': 0, 'tie': 0, 'score': 33}}
+                m = { 'name': name, 'teams': {'red': red, 'blue': blue}, 'results': results}
+            else: 
+                m = { 'name': name, 'teams': {'red': red, 'blue': blue}}
             new_matches[id] = m
 
     g_matches[str(year) + event] = new_matches
+
 

@@ -129,3 +129,15 @@ OK, so here are the main components with the events the produce or consume
 1. Generate a new match prediction in the `match` for each future match for this team
 2. Generate a new team prediction in the `team`
 Each algorithm consumer should only be updating predictions for its algorithm.  We'll have to test to ensure there are no collisions.
+
+## API Routes
+
+|Route|Method|Description|
+|-|-|-|
+|events|GET|All the events indexed by the system.|
+|events/\<code>|GET|Info for the event.|
+|events/\<code>|PUT|Create the event.  If existing, removes all results and prediction data.  If results exist, will queue them up for processing by any currently active prediction algorithms.|
+|events/\<code>|DELETE|Removes the event and all match info|
+|events/\<code>/matches|GET|List of matches|
+|events/\<code>/matches|PATCH|Add match results or predictions|
+|events/\<code>/replay|POST|Triggers match complete events if the match history exists.  This is used for testing.|
