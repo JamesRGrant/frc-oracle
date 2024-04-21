@@ -7,12 +7,8 @@
             font-family: Arial, sans-serif;
             margin: 2em;
         }
-        h1 {
-            color: #333;
-        }
-        p {
-            color: #666;
-        }
+        h1 { color: #333; }
+        p { color: #666; }
     </style>
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
@@ -27,6 +23,12 @@
 {% else %}
     <p>Hello, {{ google_data['email'] }}!</p>
     <a href="{{ url_for('logout') }}">Log out</a>
+    <br>
+    <br>
+    {% for event in events['Events'] %}
+        {{ event['name'] }}
+        <br>
+    {% endfor %}
 {% endif %}
     </center>
 </body>

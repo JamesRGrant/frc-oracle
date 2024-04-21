@@ -1,4 +1,6 @@
+# pip install -r requirements.txt
 flask
 flask-dance[sqla]
 blinker
 python-dotenv
+requests

@@ -29,6 +29,7 @@ def events():
     
     return jsonify(events)
 
+# Get the status of the FRC API
 @app.route("/api/admin/status")
 def admin_status():
     output = {}
@@ -37,8 +38,15 @@ def admin_status():
     if response.status_code == 200:
         output["frc_api"] = "ok"
     else:
-        output["frc_api"] = "error" + response.text
-    
+        output["frc_api"] = "error: " + response.text
+
+    url = "https://frc-api.firstinspires.org/v3.0/2024/events"
+    headers = {'Authorization': f'Basic {frc_key}'}
+    response = requests.request("GET", url, headers=headers)
+    if response.status_code == 200:
+        output["frc_api_auth"] = "ok"
+    else:
+        output["frc_api_auth"] = "error: " + response.text
     return jsonify(output)
 
 if __name__ == "__main__":

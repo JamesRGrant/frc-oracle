@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for
 from flask_dance.contrib.google import make_google_blueprint, google
+import requests
 
 load_dotenv()
 app = Flask(__name__)
@@ -26,8 +27,15 @@ def index():
         except:
             # Token expired log in again
             return redirect(url_for("google.login"))
+        
+        
+    url = "http://localhost:5001/api/events"
+    resp = requests.get(url)
+    if resp.status_code == 200:
+        events = resp.json()
     
-    return render_template("index.j2", google_data=google_data, fetch_url = google.base_url + "/oauth2/v2/userinfo")
+    
+    return render_template("index.j2", events=events, google_data=google_data, fetch_url = google.base_url + "/oauth2/v2/userinfo")
 
 @app.route("/login")
 def login():
