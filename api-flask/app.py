@@ -16,6 +16,7 @@ app = Flask(__name__)
 
 # Import the API routes AFTER you create the app and key
 import events
+import replay
 
 
 # Get the status of the FRC API
