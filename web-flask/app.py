@@ -77,7 +77,6 @@ def calculate_accuracy(matches):
 
     for id in matches:
         match = matches[id]
-        print(match)
         if 'results' in match and 'predictions' in match:
             if match['results']['red']['win'] == 1:
                 pred = match['predictions'][0]['red']['win']

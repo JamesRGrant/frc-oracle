@@ -15,8 +15,28 @@
 </head>
 
 <body>
+    <script>
+        function replayMatch() {
+            // Get the current URL, which has the match ID at the end
+            var url_parts = window.location.href.split('//')[1].split('/');
+            var match_id = url_parts[url_parts.length - 1];
+            var base_url = "http://" + url_parts[0].replace("5000", "5001");
+
+            // Remove the predictions by reloading this event
+            url = base_url + '/api/events/' + match_id;
+            fetch(url, {method: 'PUT'});
+
+            // Trigger the replay
+            url = base_url + '/api/events/' + match_id + '/replay';
+            fetch(url, {method: 'POST'});
+
+        }
+    </script>
+
     <center>
     <h1>{{ title }}</h1>
+
+    <input id="replay" type="button" value="Replay Match" onclick="replayMatch()" />
 
     <table>
         <tr><td>Final Guess Accuracy:</td><td>{{ final_guess_accuracy }}</td></tr>
