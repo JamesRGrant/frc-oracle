@@ -22,6 +22,8 @@
             url = base_url + '/api/events/' + match_id + '/replay';
             fetch(url, {method: 'POST'});
 
+            // Refresh the page
+            location.reload();
         }
     </script>
 
@@ -58,14 +60,10 @@
         <td bgcolor="lightblue">{{ match['teams']['blue'][0] }}</td>
         <td bgcolor="lightblue">{{ match['teams']['blue'][1]}}</td>
         <td bgcolor="lightblue">{{ match['teams']['blue'][2] }}</td>
-
-        <!-- Predicted -->
         {% set color = '' %}
         {% set pred_count = '' %}
         {% if match.predictions %}
             {% set pred_count = 'n = ' + match['predictions'][0]['red']['win']|length|string() %}
-
-            <!-- Get the value of the last prediction -->
             {% if match['predictions'][0]['red']['win'][-1] == 1 %}
                 {% set color = 'lightcoral' %}
             {% elif match['predictions'][0]['blue']['win'][-1] == 1 %}
@@ -73,21 +71,18 @@
             {% endif %} 
         {% endif %}
         <td bgcolor="{{color}}">{{pred_count}}</td>
-
-        <!-- Actual -->
         {% set color = '' %}
         {% set text = '' %}
         {% if match.results %}
-            
             {% if match['results']['red']['win'] == 1 %}
                 {% set color = 'lightcoral' %}
                 {% set text = '<b>' + match['results']['red']['score']|string() + '</B> - ' + match['results']['blue']['score']|string() %}
             {% elif match['results']['blue']['win'] == 1 %}
-                {% set text = match['results']['red']['score']|string() + ' - <b>' + match['results']['blue']['score']|string() + '</b>' %}
                 {% set color = 'lightblue' %}
-            <% else %>
+                {% set text = match['results']['red']['score']|string() + ' - <b>' + match['results']['blue']['score']|string() + '</b>' %}
+            {% else %}
                 {% set text = match['results']['red']['score']|string() + ' - ' + match['results']['blue']['score']|string() %}
-                {% set color = 'lightpurple' %}
+                {% set color = '#E0B0FF' %}
             {% endif %} 
         {% endif %} 
         <td bgcolor="{{color}}">{{text}}</td>

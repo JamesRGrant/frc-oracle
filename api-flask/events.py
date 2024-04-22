@@ -14,6 +14,7 @@ def route_events():
 def route_event(event_id):  
     # Mixed case will not match
     event_id = event_id.upper()
+    global g_events
 
     if request.method == 'GET':
         for e in g_events['Events']:
@@ -25,6 +26,11 @@ def route_event(event_id):
     
     if request.method == 'PUT':
         """create or recreate the event"""
+
+        # Delete it if it exists
+        print(f'Deleting event {event_id}')
+        g_events.pop(event_id, None)
+
         year = event_id[0:4]
         code = event_id[4:]
         load_event(year, code)
