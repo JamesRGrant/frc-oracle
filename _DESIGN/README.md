@@ -110,7 +110,7 @@ Let's say you just finished the last match in round 5 (everyone has played 5 mat
 
 Then, we want to update the team stats.  We could have each match prediction kick off an event to update it, but then we are triggering 30 updates to team stats.  In reality, we only need 6 (one for each team).  So, i if we have several events (match-complete, predict-match, predict-team) we need to either coordinate all the predict-match events completing before processing predict-team, or we simply predict more team updates than we need to.
 
-To simplify this, we will only use a single event, `match-complete`.  A single consumer can update the match results.  Then, one or more algorithm consumers can update the future matches and team.  There is still an opportunity for parallelism of the match predictions, but that can be implemented by each algorithm consumer.
+To simplify this, we will only use a single event, `match-complete`.  A single consumer can update the match results.  Then, one or more algorithm consumers can update the future matches and team.  The algorithms do not need to wait on the other consumuer to update the match results because they will have them in the message also.  There is still an opportunity for parallelism of the match predictions, but that can be implemented by each algorithm consumer.
 
 OK, so here are the main components with the events the produce or consume
 
