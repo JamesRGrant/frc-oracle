@@ -1,10 +1,14 @@
-import os
+import os, sys, logging
 from dotenv import load_dotenv
 from flask import Flask,  request, jsonify
+from flask_cors import CORS, cross_origin
 import requests
 import base64
 from kafka import KafkaConsumer
+import util
 
+# Start the logger to output to the console.  Use INFO for normal release, DEBUG to see data packets
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='%(asctime)s|%(levelname)-8s|%(message)s')
 
 # Load the environment variables
 load_dotenv()
@@ -13,6 +17,8 @@ load_dotenv()
 frc_key = base64.b64encode(os.getenv("FRC_API").encode("ascii")).decode("ascii")
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Import the API routes AFTER you create the app and key
 import events
@@ -21,7 +27,12 @@ import replay
 
 # Get the status of the FRC API
 @app.route("/api/admin/status")
+@util.log_stats
 def admin_status():
+    resp = util.check_auth(request.headers)
+    if resp[1] != 200:
+        return resp
+    
     output = {}
      
     # Verify the FRC API is up
@@ -53,6 +64,9 @@ def admin_status():
                 break;
     except:
         output["kafka"] = "error: not connected"
+
+    # Display call statistics
+    output["calls"] = util.calls  
     
     return jsonify(output)
 

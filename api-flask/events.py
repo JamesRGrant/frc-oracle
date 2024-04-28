@@ -1,16 +1,21 @@
 from __main__ import app, frc_key
 from matches import load_matches
 from flask import request, jsonify
+from flask_cors import cross_origin
 import requests
+import util
 
 # This is our in memory cache
 g_events = {'Events': []}
 
 @app.route("/api/events")
+@util.log_stats
 def route_events():  
     return jsonify(g_events)
 
-@app.route("/api/events/<event_id>", methods = ['GET', 'PUT', 'POST', 'DELETE'])
+@app.route("/api/events/<event_id>", methods = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])
+@cross_origin()
+@util.log_stats
 def route_event(event_id):  
     # Mixed case will not match
     event_id = event_id.upper()
@@ -36,7 +41,12 @@ def route_event(event_id):
         load_event(year, code)
         for e in g_events['Events']:
             if e['id'] == event_id:
-                return jsonify(e)
+                response = jsonify(e)
+                response.headers.add('Access-Control-Allow-Origin', '*')
+                response.headers.add('Access-Control-Allow-Credentials', 'True')
+                response.headers.add('Access-Control-Allow-Methods', 'PUT, OPTIONS')
+                response.headers.add('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, X-Auth-Token')
+                return response
         
         # If we failed it must not be a real event, return Bad Request
         return jsonify({'error': 'Event not valid, key is YEARCODE.  Ex: 2024WIMI'}), 400
@@ -63,7 +73,12 @@ def route_event(event_id):
             return jsonify({'error': 'Event not found, key is YEARCODE.  Ex: 2024WIMI'}), 404
 
     else:
-        return jsonify({'error': 'Method Not Allowed'}), 405
+        response = jsonify({'error': 'Method Not Allowed'}), 405
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Credentials', 'True')
+        response.headers.add('Access-Control-Allow-Methods', 'PUT, OPTIONS')
+        response.headers.add('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, X-Auth-Token')
+        return response
 
 def load_event(year, code):
     global g_events

@@ -28,8 +28,13 @@ env = load_env(["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "SECRET_KEY", "OAUTH
 # Create the flask app with Google Auth
 app = Flask(__name__)
 app.secret_key = env['SECRET_KEY']
+
+# These two remove all the extra whitespace from script in the templates
+app.jinja_env.trim_blocks = True
+app.jinja_env.lstrip_blocks = True
 bp = make_google_blueprint(client_id=env['GOOGLE_CLIENT_ID'], client_secret=env['GOOGLE_CLIENT_SECRET'], reprompt_consent=True, scope=["email"], offline=True)
 app.register_blueprint(bp, url_prefix="/login")
+
 
 # This is the main page.  If the user is not logged in, it will show a login link.  
 # If the user is logged in, it will show the user's email address and links to the Events

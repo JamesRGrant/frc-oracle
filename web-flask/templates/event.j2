@@ -8,7 +8,7 @@
 
 <body>
     <script>
-        function replayMatch() {
+        async function clear_data() {
             // Get the current URL, which has the match ID at the end
             var url_parts = window.location.href.split('//')[1].split('/');
             var match_id = url_parts[url_parts.length - 1];
@@ -16,40 +16,59 @@
 
             // Remove the predictions by reloading this event
             url = base_url + '/api/events/' + match_id;
-            fetch(url, {method: 'PUT'});
+            try {
+                r = await fetch(url, {method: 'PUT'});      
+            } catch (e) {
+                console.log(e);
+            }
+
+            location.reload();
+        }
+
+        async function replayOne() {
+            // Get the current URL, which has the match ID at the end
+            var url_parts = window.location.href.split('//')[1].split('/');
+            var match_id = url_parts[url_parts.length - 1];
+            var base_url = "http://" + url_parts[0].replace("5000", "5001");
+
+            // Trigger the replay
+            url = base_url + '/api/events/' + match_id + '/replayone';
+            await fetch(url, {method: 'POST'});
+
+            // Refresh the page
+            await new Promise(r => setTimeout(r, 3000));
+            location.reload();
+        }
+
+        async function replayMatch() {
+            // Get the current URL, which has the match ID at the end
+            var url_parts = window.location.href.split('//')[1].split('/');
+            var match_id = url_parts[url_parts.length - 1];
+            var base_url = "http://" + url_parts[0].replace("5000", "5001");
 
             // Trigger the replay
             url = base_url + '/api/events/' + match_id + '/replay';
-            fetch(url, {method: 'POST'});
+            await fetch(url, {method: 'POST'});
 
             // Refresh the page
+            await new Promise(r => setTimeout(r, 2000));
             location.reload();
         }
     </script>
 
     <center>
     <h1>{{ title }}</h1>
-
-    <input id="replay" type="button" value="Replay Match" onclick="replayMatch()" />
+    <input id="clear" type="button" value="Clear" onclick="clear_data()" />
+    <input id="replay" type="button" value="Replay 1" onclick="replayMatch()" />
+    <input id="all" type="button" value="Replay All" onclick="replayMatch()" />
 
     <table>
         <tr><td>Final Guess Accuracy:</td><td>{{ final_guess_accuracy }}</td></tr>
         <tr><td>All Guesses Accuracy:</td><td>{{ all_guesses_accuracy }}</td></tr>
     </table>
 
-
     <table>
-    <tr>
-        <th>Match</th>
-        <th>R1</th>
-        <th>R2</th>
-        <th>R3</th>
-        <th>B1</th>
-        <th>B2</th>
-        <th>B3</th>
-        <th>Predicted</th>
-        <th>Actual</th>
-    </tr>
+    <tr><th>Match</th><th>R1</th><th>R2</th><th>R3</th><th>B1</th><th>B2</th><th>B3</th><th>Predicted</th><th>Actual</th></tr>
     {% for id in matches %}
     <tr>
         {% set match = matches[id] %}

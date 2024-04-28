@@ -49,7 +49,6 @@ def main():
         resp = requests.patch(url, json=data, headers=headers)
         if resp.status_code == 200:
             logging.info(f'Updated {event}:{match_id} with {data}')
-            time.sleep(0.5)
         else:
             logging.error(f'Match patch failed: {resp.status_code}: {resp.text}')
 
@@ -57,7 +56,5 @@ def main():
     logging.info("Closing consumer.")
     consumer.close()
     
-
-
 if __name__ == "__main__":
     main()
