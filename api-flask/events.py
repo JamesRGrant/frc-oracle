@@ -34,8 +34,11 @@ def route_event(event_id):
         """create or recreate the event"""
 
         # Delete it if it exists
-        print(f'Deleting event {event_id}')
-        g_events.pop(event_id, None)
+        logging.info(f'Deleting event {event_id}')
+        for e in g_events['Events']:
+            if e['id'] == event_id:
+                g_events['Events'].remove(e)
+                break
 
         year = event_id[0:4]
         code = event_id[4:]
