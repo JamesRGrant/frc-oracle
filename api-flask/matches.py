@@ -1,4 +1,4 @@
-from __main__ import app, frc_key
+from app import app, frc_key
 from flask import request, jsonify
 import requests
 import util

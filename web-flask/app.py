@@ -58,7 +58,7 @@ def index():
         return redirect(url_for("google.login"))
     
     # Get the events we have indexed
-    resp = requests.get('http://localhost:5001/api/events')
+    resp = requests.get('http://api:5001/api/events')
     if resp.status_code == 200:
         events = resp.json()
         logging.debug(events)
@@ -76,7 +76,7 @@ def event(id):
     matches = {}
 
     # Get the event name
-    url = "http://localhost:5001/api/events/" + id
+    url = "http://api:5001/api/events/" + id
     resp = requests.get(url)
     if resp.status_code == 200:
         event_name = resp.json()['name']
@@ -86,7 +86,7 @@ def event(id):
         logging.error(f'Error getting event name: {resp.text}')
 
     # Get the matches
-    url = "http://localhost:5001/api/events/" + id + "/matches"
+    url = "http://api:5001/api/events/" + id + "/matches"
     resp = requests.get(url)
     if resp.status_code == 200:
         matches = resp.json()

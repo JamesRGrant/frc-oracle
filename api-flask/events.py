@@ -1,9 +1,10 @@
-from __main__ import app, frc_key
+from app import app, frc_key
 from matches import load_matches
 from flask import request, jsonify
 from flask_cors import cross_origin
 import requests
 import util
+import logging
 
 # This is our in memory cache
 g_events = {'Events': []}
@@ -81,6 +82,8 @@ def route_event(event_id):
         return response
 
 def load_event(year, code):
+    code = code.upper()
+
     global g_events
     # Get the Event Name
     url = f'https://frc-api.firstinspires.org/v3.0/{year}/events'
@@ -89,8 +92,13 @@ def load_event(year, code):
     params['eventCode'] = code
     response = requests.request("GET", url, headers=headers,params=params)
     if response.status_code == 200:
-        first = response.json()['Events'][0]
-        e = {'id': str(year) + first['code'], 'name': first['name']}
-        g_events['Events'].append(e)
+        events = response.json()['Events']
+        logging.info(f'Loading event {year}{code}, FRC returned {len(events)} events')
+        for event in events:
+            if event['code'] == code:
+                e = {'id': str(year) + code, 'name': event['name']}
+                logging.info(f'Adding event {e}')
+                g_events['Events'].append(e)
+                break
 
         load_matches(year, code)

@@ -13,6 +13,7 @@
             var url_parts = window.location.href.split('//')[1].split('/');
             var match_id = url_parts[url_parts.length - 1];
             var base_url = "http://" + url_parts[0].replace("5000", "5001");
+            base_url = base_url.replace("8000", "5001");
 
             // Remove the predictions by reloading this event
             url = base_url + '/api/events/' + match_id;
@@ -30,6 +31,7 @@
             var url_parts = window.location.href.split('//')[1].split('/');
             var match_id = url_parts[url_parts.length - 1];
             var base_url = "http://" + url_parts[0].replace("5000", "5001");
+            base_url = base_url.replace("8000", "5001");
 
             // Trigger the replay
             url = base_url + '/api/events/' + match_id + '/replayone';
@@ -45,6 +47,7 @@
             var url_parts = window.location.href.split('//')[1].split('/');
             var match_id = url_parts[url_parts.length - 1];
             var base_url = "http://" + url_parts[0].replace("5000", "5001");
+            base_url = base_url.replace("8000", "5001");
 
             // Trigger the replay
             url = base_url + '/api/events/' + match_id + '/replay';

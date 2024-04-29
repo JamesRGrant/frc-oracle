@@ -2,6 +2,7 @@ import os, sys, logging
 from dotenv import load_dotenv
 import requests, json
 from kafka import KafkaConsumer
+from time import sleep
 import logging
 
 # Start the logger to output to the console.  Use INFO for normal release, DEBUG to see data packets
@@ -24,7 +25,7 @@ def get_team_scores(event_id, match_id, red_score, blue_score):
     these_teams = []
 
     # Get the match data
-    url = f'http://localhost:5001/api/events/{event_id}/matches'
+    url = f'http://api:5001/api/events/{event_id}/matches'
     resp = requests.get(url)
     if resp.status_code != 200:
         logging.error(f'Match get failed: {resp.status_code}: {resp.text}')
@@ -93,7 +94,15 @@ def main():
     env = load_env(['KAFKA_BOOTSTRAP_SERVER', 'KAFKA_TOPIC'])
 
     # Create the consumer
-    consumer = KafkaConsumer(env["KAFKA_TOPIC"], client_id='simple-average-py', bootstrap_servers=env["KAFKA_BOOTSTRAP_SERVER"])
+    consumer = None
+    while True:    
+        try:
+            consumer = KafkaConsumer(env["KAFKA_TOPIC"], client_id='simple-average', bootstrap_servers=env["KAFKA_BOOTSTRAP_SERVER"])
+            break
+        except:
+            logging.error("Could not connect to Kafka.  Retrying...")
+            sleep(10)
+            continue
 
     # Loop forever
     for message in consumer:
@@ -128,7 +137,7 @@ def main():
                 red_win = 1 if red_score > blue_score else 0
                 blue_win = 1 if blue_score > red_score else 0
 
-                url = f'http://localhost:5001/api/events/{event}/matches/{seq}'
+                url = f'http://api:5001/api/events/{event}/matches/{seq}'
                 headers = {'Content-Type': 'application/json', 'charset': 'utf-8'}
                 data = {'algorithm': 'average_score', 'red': {'win': red_win}, 'blue': {'win': blue_win}}
                 resp = requests.patch(url, json=data, headers=headers)

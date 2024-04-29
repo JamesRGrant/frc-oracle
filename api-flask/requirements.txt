@@ -1,6 +1,7 @@
 # pip install -r requirements.txt
 flask
 flask-cors
+flask-dance[sqla]
 python-dotenv
 requests
 kafka-python

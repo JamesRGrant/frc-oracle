@@ -23,7 +23,11 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # Import the API routes AFTER you create the app and key
 import events
 import replay
+import matches
 
+# Since we don't have a database, we are going to hard code the default events
+for e in ['WIMI', 'WILA']:
+    events.load_event(2024, e)
 
 # Get the status of the FRC API
 @app.route("/api/admin/status")
@@ -54,7 +58,7 @@ def admin_status():
     # Verify the Kafka server is up
     try:
         topic = 'match-results'
-        consumer = KafkaConsumer(bootstrap_servers='localhost:9092')
+        consumer = KafkaConsumer(bootstrap_servers=os.getenv("KAFKA"))
         topics = consumer.topics()
         consumer.close()
         output["kafka"] = f'online but topic {topic} not found'
@@ -73,7 +77,4 @@ def admin_status():
 
 
 if __name__ == "__main__":
-    # Since we don't have a database, we are going to hard code the default events
-    for e in ['WIMI', 'WILA']:
-        events.load_event(2024, e)
     app.run(use_reloader=True, port=5001)
