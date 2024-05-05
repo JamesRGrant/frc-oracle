@@ -14,7 +14,7 @@ g_events = {'Events': []}
 def route_events():  
     return jsonify(g_events)
 
-@app.route("/api/events/<event_id>", methods = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])
+@app.route("/api/events/<event_id>", methods = ['GET', 'PUT', 'DELETE', 'OPTIONS'])
 @cross_origin()
 @util.log_stats
 def route_event(event_id):  

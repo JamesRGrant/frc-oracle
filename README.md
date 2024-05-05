@@ -66,4 +66,21 @@ Reference additional information in the [_Design](./_DESIGN/README.md) folder
 ## How to run
 The system can be run local on a single laptop that is running linux (use WSL for Windows).  This is primarily for development purposes, but it could be run locally to try it out at an event.  
 
-Ultimately, the system is designed to run in a cloud envionment so that a team could share data and simply access it from their cell phones or tablets.
+In the root directory, simnply run 
+`docker compose up`
+This will run in the window with the logs running.  Use `-d` if you want to run it in the background.
+
+Alternatively, every subdirectory can be run directly from the terminal window if you are debugging issues.
+
+Ultimately, the system is designed to run in a cloud envionment so that a team could share data and simply access it from their cell phones or tablets.  I was able to quickly deploy in a VM, called a Droplet in Digital Ocean.  See this article for instructions on how to select the correct image: 
+    https://www.digitalocean.com/community/questions/how-do-i-upload-a-docker-compose-application-that-it-in-github
+
+Before running docker compose, I needed to:
+1. Create .env files in the subdirectories for all the secrets/paths
+2. apt install docker-compose
+
+Finally, Google Auth requires URL will a trusted domain suffix.  So accessing it via the IP will not work.  I was able to use the nip.io service.
+
+Instead of: http://your-IP:8000/
+
+Try: http://your-IP.nip.io:8000/
